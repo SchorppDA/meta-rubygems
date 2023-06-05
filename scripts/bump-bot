@@ -61,7 +61,7 @@ def main():
         _map_repo[_dir] = Git(_dir, _args.git_user, _args.git_mail)
 
     _main_git.create_branch("rev_bump_{}".format(
-        datetime.datetime.now().strftime("%Y%m%d")))
+        datetime.datetime.now().strftime("%Y%m%d")), _args.branch)
 
     for root, dirs, files in os.walk(_main_git.root):
         for _f in files:

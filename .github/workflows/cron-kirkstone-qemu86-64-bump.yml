@@ -52,7 +52,7 @@ jobs:
       - name: checkout (meta-rubygems)
         uses: priv-kweihmann/meta-sca-ci-utils/addlayer@latest
         with:
-          repo: https://github.com/priv-kweihmann/meta-rubygems.git
+          repo: https://github.com/SchorppDA/meta-rubygems.git
           branch: ${{ env.SCM_BRANCH }}
           remove-git: "0"
           add-layer: "0"
