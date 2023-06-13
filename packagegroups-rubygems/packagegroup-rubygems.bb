@@ -227,6 +227,7 @@ RDEPENDS:${PN} += "\
     rubygems-pastel \
     rubygems-path-expander \
     rubygems-pathutil \
+    rubygems-patron \
     rubygems-plist \
     rubygems-progress-bar \
     rubygems-proxifier \
