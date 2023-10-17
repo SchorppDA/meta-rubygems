@@ -17,8 +17,8 @@ Feel free to contribute any needed patches.
 
 Up to the following revisions automated checks being performed
 
-* poky: 2b49a8fbf0c7965982e50e6e2643b17523c119c9
-* meta-openembedded: 9cf4ebeb3de524009a73f49722489dc4aa183adb
+* poky: f82ed3a207c68bab30e2fd6fee0181f85c8cd0a6
+* meta-openembedded: 35bcd8c6ddfb6bc8729d0006dab887afcc772ec9
 
 ## Support
 
