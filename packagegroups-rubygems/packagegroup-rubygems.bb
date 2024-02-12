@@ -273,6 +273,7 @@ RDEPENDS:${PN} += "\
     rubygems-simplecov-json-formatter \
     rubygems-slop \
     rubygems-specinfra \
+    rubygems-sqlite3 \
     rubygems-sslshake \
     rubygems-strings \
     rubygems-strings-ansi \
