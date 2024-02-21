@@ -107,6 +107,7 @@ RDEPENDS:${PN} += "\
     rubygems-colorator \
     rubygems-concurrent-ruby \
     rubygems-connection-pool \
+    rubygems-cookiejar \
     rubygems-cookstyle \
     rubygems-corefoundation \
     rubygems-declarative \
@@ -118,6 +119,8 @@ RDEPENDS:${PN} += "\
     rubygems-docker-api \
     rubygems-domain-name \
     rubygems-ed25519 \
+    rubygems-em-http-request \
+    rubygems-em-socksify \
     rubygems-em-websocket \
     rubygems-equalizer \
     rubygems-erubi \
@@ -273,6 +276,7 @@ RDEPENDS:${PN} += "\
     rubygems-simplecov-json-formatter \
     rubygems-slop \
     rubygems-specinfra \
+    rubygems-sqlite3 \
     rubygems-sslshake \
     rubygems-strings \
     rubygems-strings-ansi \
