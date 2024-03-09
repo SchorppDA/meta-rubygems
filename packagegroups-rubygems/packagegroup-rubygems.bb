@@ -101,6 +101,7 @@ RDEPENDS:${PN} += "\
     rubygems-chef-utils \
     rubygems-chef-vault \
     rubygems-chef-zero \
+    rubygems-childprocess \
     rubygems-codeclimate-engine-rb \
     rubygems-coderay \
     rubygems-coercible \
