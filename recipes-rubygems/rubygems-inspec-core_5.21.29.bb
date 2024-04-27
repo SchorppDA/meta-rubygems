@@ -39,6 +39,8 @@ GEM_INSTALL_FLAGS:append = " "
 SRC_URI[md5sum] = "597102cedca0930f6fcfc41a0d039a92"
 SRC_URI[sha256sum] = "a76dbbe47859f5e8c3e02389f9e78afa41ff68455de34969d9d7115d2d693fc7"
 
+SRC_URI:append = " file://0001-profile-fix-parser-API-change.patch"
+
 GEM_NAME = "inspec-core"
 
 inherit rubygems
