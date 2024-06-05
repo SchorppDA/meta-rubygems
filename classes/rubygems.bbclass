@@ -13,11 +13,13 @@ GEM_VERSION ?= "${PV}"
 SRC_URI = "${GEM_SRC}/${GEM_FILENAME}"
 GEMPREFIX = "gem-"
 
-S = "${WORKDIR}/${GEM_NAME}-${GEM_VERSION}"
+UNPACKDIR ??= "${WORKDIR}/gem-dl"
+
+S = "${UNPACKDIR}/${GEM_NAME}-${GEM_VERSION}"
 
 GEM_FILENAME = "${GEM_NAME}-${GEM_VERSION}.gem"
-GEM_FILE ?= "${WORKDIR}/${GEM_FILENAME}"
-GEM_BUILT_FILE = "${S}/${GEM_FILENAME}"
+GEM_FILE ?= "${UNPACKDIR}/${GEM_FILENAME}"
+GEM_BUILT_FILE = "${UNPACKDIR}/${GEM_FILENAME}"
 
 GEM_SPEC_FILENAME = "${GEM_FILENAME}spec"
 GEM_SPEC_FILE ?= "${S}/${GEM_SPEC_FILENAME}"
@@ -78,7 +80,7 @@ def get_target_platform_folder(d):
 do_gem_unpack() {
     export RUBYLIB=${RUBYLIB}
 
-    cd ${WORKDIR}
+    cd ${UNPACKDIR}
     # GEM_FILE might not exist if SRC_URI was overloaded
     [ ! -e ${GEM_FILE} ] && return 0
 
@@ -95,6 +97,14 @@ python () {
 do_gem_unpack[vardepsexclude] += "prefix_native"
 addtask do_gem_unpack after do_unpack before do_patch
 
+python do_unpack:append() {
+    # as the actual unpack happens in do_gem_unpack
+    # we will work around insane-class checks
+    # by just creating the needed directories here
+    os.makedirs(d.expand('${S}'), exist_ok=True)
+    os.makedirs(d.expand('${UNPACKDIR}'), exist_ok=True)
+}
+
 do_generate_spec() {
     export RUBYLIB=${RUBYLIB}
     export GEM_SPEC=${GEM_SPEC_CACHE}
@@ -106,10 +116,14 @@ do_generate_spec() {
 
     # lift the version bindings to be less strict
     if [ "${GEM_DISABLE_STRICT_VER}" -eq "1" ]; then
+        sed -i 's#=[[:space:]]*[0-9]\+\.[0-9]\+#!=0#g' ${GEM_SPEC_FILE}
         sed -i 's#~>#>=#g' ${GEM_SPEC_FILE}
         sed -i 's#<=[[:space:]]*[0-9]\+\.[0-9]\+\.[0-9]\+#!=0#g' ${GEM_SPEC_FILE}
         sed -i 's#<[[:space:]]*[0-9]\+\.[0-9]\+\.[0-9]\+#!=0#g' ${GEM_SPEC_FILE}
         sed -i 's#<[[:space:]]*[0-9]\+\.[0-9]\+#!=0#g' ${GEM_SPEC_FILE}
+        sed -i 's#>!=#!=#g' ${GEM_SPEC_FILE}
+        sed -i 's#!!=#!=#g' ${GEM_SPEC_FILE}
+        sed -i 's#<!=0#!=0#g' ${GEM_SPEC_FILE}
     fi
 }
 
