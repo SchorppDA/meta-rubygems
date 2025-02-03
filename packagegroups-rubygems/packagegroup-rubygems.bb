@@ -314,6 +314,7 @@ RDEPENDS:${PN} += "\
     rubygems-winrm-fs \
     rubygems-wisper \
     rubygems-wmi-lite \
+    rubygems-xmldsig \
     rubygems-yajl-ruby \
     rubygems-yard \
     rubygems-zeitwerk \
