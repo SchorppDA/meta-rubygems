@@ -262,6 +262,7 @@ RDEPENDS:${PN} += "\
     rubygems-safe-yaml \
     rubygems-sassc \
     rubygems-scanf \
+    rubygems-sd-notify \
     rubygems-semantic-puppet \
     rubygems-semverse \
     rubygems-serverspec \
@@ -314,6 +315,7 @@ RDEPENDS:${PN} += "\
     rubygems-winrm-fs \
     rubygems-wisper \
     rubygems-wmi-lite \
+    rubygems-xmldsig \
     rubygems-yajl-ruby \
     rubygems-yard \
     rubygems-zeitwerk \
