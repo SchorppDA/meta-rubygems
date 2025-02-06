@@ -93,6 +93,7 @@ RDEPENDS:${PN} += "\
     rubygems-azure-mgmt-security \
     rubygems-azure-mgmt-storage \
     rubygems-bcrypt-pbkdf \
+    rubygems-bindata \
     rubygems-bson \
     rubygems-builder \
     rubygems-chef \
