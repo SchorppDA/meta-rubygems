@@ -98,9 +98,13 @@ RDEPENDS:${PN} += "\
     rubygems-builder \
     rubygems-chef \
     rubygems-chef-config \
+    rubygems-chef-gyoku \
     rubygems-chef-telemetry \
     rubygems-chef-utils \
     rubygems-chef-vault \
+    rubygems-chef-winrm \
+    rubygems-chef-winrm-elevated \
+    rubygems-chef-winrm-fs \
     rubygems-chef-zero \
     rubygems-codeclimate-engine-rb \
     rubygems-coderay \
