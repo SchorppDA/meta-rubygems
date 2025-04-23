@@ -27,9 +27,9 @@ SRC_URI[sha256sum] = "ff47586b93280aa6dd4d9a9097337219f641f829b6d56b709339eda169
 
 GEM_NAME = "ffi-yajl"
 
-export FORCE_FFI_YAJL="ffi"
+export FORCE_FFI_YAJL = "ffi"
 
-export USE_SYSTEM_LIBYAJL2="1"
+export USE_SYSTEM_LIBYAJL2 = "1"
 
 inherit rubygems
 inherit rubygentest
