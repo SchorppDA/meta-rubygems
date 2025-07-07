@@ -35,19 +35,6 @@ jobs:
     steps:
       - name: setup (container)
         uses: priv-kweihmann/meta-sca-ci-utils/preparecontainer@latest
-      - name: additional setup (caches)
-        id: caches
-        uses: actions/cache@v3
-        with:
-          path: /opt/build/sstate-cache
-          key: rubygems-arm64-glibc-${{ env.SCM_BRANCH }}-${{ github.sha }}
-          restore-keys: |
-            rubygems-arm64-glibc-${{ env.SCM_BRANCH }}-
-      - name: configure (caches fallback)
-        if: ${{ ! steps.caches.outputs.cache-hit }}
-        run: |
-          mkdir -p ${WORKSPACE}/sstate-cache
-        shell: bash
       - name: checkout (poky)
         uses: priv-kweihmann/meta-sca-ci-utils/addlayer@latest
         with:
@@ -67,6 +54,19 @@ jobs:
           repo: git://git.openembedded.org/meta-openembedded
           ref: 9cf4ebeb3de524009a73f49722489dc4aa183adb
           add-layer: "0"
+      - name: additional setup (caches)
+        id: caches
+        uses: actions/cache@v3
+        with:
+          path: /opt/build/sstate-cache
+          key: rubygems-arm64-glibc-${{ env.SCM_BRANCH }}-${{ github.sha }}
+          restore-keys: |
+            rubygems-arm64-glibc-${{ env.SCM_BRANCH }}-
+      - name: configure (caches fallback)
+        if: ${{ ! steps.caches.outputs.cache-hit }}
+        run: |
+          mkdir -p ${WORKSPACE}/sstate-cache
+        shell: bash
       - name: activate (caches)
         uses: priv-kweihmann/meta-sca-ci-utils/addvar@latest
         with:
