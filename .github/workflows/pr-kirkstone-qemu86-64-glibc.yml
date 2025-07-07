@@ -67,11 +67,6 @@ jobs:
         run: |
           mkdir -p ${WORKSPACE}/sstate-cache
         shell: bash
-      - name: activate (caches)
-        uses: priv-kweihmann/meta-sca-ci-utils/addvar@latest
-        with:
-          variable: SSTATE_DIR
-          value: "${WORKSPACE}/sstate-cache"
       - if: env.BUILD_GLIBC == '1'
         name: build (glibc)
         uses: priv-kweihmann/meta-sca-ci-utils/buildstep@latest
