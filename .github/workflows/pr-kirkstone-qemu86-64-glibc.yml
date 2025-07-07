@@ -46,7 +46,8 @@ jobs:
       - name: configure (caches fallback)
         if: ${{ ! steps.caches.outputs.cache-hit }}
         run: |
-          mkdir -p /opt/build/sstate-cache
+          mkdir -p ${WORKSPACE}/sstate-cache
+        shell: bash
       - name: checkout (poky)
         uses: priv-kweihmann/meta-sca-ci-utils/addlayer@latest
         with:
