@@ -1,17 +1,15 @@
-name: "[cron]-[glibc]-[qemuarm64]-[pkgupdate]"
+name: "[scarthgap]-[glibc]-[qemuarm64]"
 
 on:
-  repository_dispatch:
-    types: do-package-update
-  schedule:
-    - cron: "0 2 * * 6"
-  workflow_dispatch:
+  push:
+    branches:
+      - scarthgap
 
 jobs:
   buildrun:
     name: "build"
     env:
-      SCM_BRANCH: master
+      SCM_BRANCH: scarthgap
       BUILD_MAXRUNTIME: 21000
       PYTHONIOENCODING: utf8
       LC_ALL: en_US.UTF-8
@@ -37,17 +35,10 @@ jobs:
           mkdir -p ${WORKSPACE}/sstate-cache
         shell: bash
       - name: additional setup (caches)
-        id: caches
         uses: actions/cache@v3
         with:
           path: /opt/build/sstate-cache
           key: rubygems-arm64-glibc-${{ env.SCM_BRANCH }}-${{ github.sha }}
-          restore-keys: |
-            rubygems-arm64-glibc-${{ env.SCM_BRANCH }}-
-      - name: configure (caches fallback)
-        if: ${{ ! steps.caches.outputs.cache-hit }}
-        run: |
-          mkdir -p /opt/build/sstate-cache
       - name: checkout (poky)
         uses: priv-kweihmann/meta-sca-ci-utils/addlayer@latest
         with:
@@ -58,9 +49,8 @@ jobs:
       - name: checkout (meta-rubygems)
         uses: priv-kweihmann/meta-sca-ci-utils/addlayer@latest
         with:
-          repo: https://github.com/priv-kweihmann/meta-rubygems.git
+          repo: https://github.com/${{ github.repository_owner }}/meta-rubygems.git
           branch: ${{ env.SCM_BRANCH }}
-          remove-git: "0"
           add-layer: "0"
       - name: checkout (meta-openembedded)
         uses: priv-kweihmann/meta-sca-ci-utils/addlayer@latest
@@ -69,11 +59,11 @@ jobs:
           ref: 5a02b76b82d1f48986212c33dddf7986385c79ef
           branch: none
           add-layer: "0"
-      - name: activate (caches)
+      - name: configure (caches)
         uses: priv-kweihmann/meta-sca-ci-utils/addvar@latest
         with:
           variable: SSTATE_DIR
-          value: "${WORKSPACE}/sstate-cache"
+          value: /opt/build/sstate-cache
       - name: build (glibc)
         uses: priv-kweihmann/meta-sca-ci-utils/buildstep@latest
         with:
@@ -89,44 +79,22 @@ jobs:
         with:
           target: qemu-system-native
           ignore-exit-codes: 124 137
-      - name: setup (rubygemsdebug)
-        uses: priv-kweihmann/meta-sca-ci-utils/addvar@latest
-        with:
-          variable: INHERIT
-          operation: " += "
-          value: "rubygemsdebug"
-      - name: setup (generate test files)
-        uses: priv-kweihmann/meta-sca-ci-utils/addvar@latest
-        with:
-          variable: RUBYGEMS_AUTOGEN_TESTS
-          value: "1"
-      - name: install (additional packages)
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y --no-install-recommends curl
-        shell: bash
+      # From here on we also accept exit code 1, as there's
+      # a high chance that we will run out of disk space
+      # and current bitbake does not support
+      # specific exit codes for BBDISKMON related settings
+      # In the end we only care about the caches falling
+      # out of this build, so that should be all fine
       - name: build (tools)
         uses: priv-kweihmann/meta-sca-ci-utils/buildstep@latest
         with:
           target: "ruby gmp yajl libxml2 libxslt krb5 libffi"
-          ignore-exit-codes: 124 137
+          ignore-exit-codes: 124 137 1
       - name: build (core-image-minimal-rubygems)
         uses: priv-kweihmann/meta-sca-ci-utils/buildstep@latest
         with:
           target: core-image-minimal-rubygems
-          ignore-exit-codes: 124 137
-      - name: build (package update)
-        run: |
-          source /github/actions/scripts/utils
-          setup_bitbake
-          GIT_USER="${{ secrets.BOTNAME }}" \
-          GIT_MAIL="${{ secrets.BOTMAIL }}" \
-          GIT_USERNAME="${{ secrets.BOTGITUSER }}" \
-          GIT_PASSWORD="${{ secrets.BOTTOKEN }}" \
-          GITHUB_REPO_USER=${{ github.repository_owner }} \
-          GITHUB_REPO=meta-rubygems \
-          ${WORKSPACE}/sources/meta-rubygems/scripts/package-bot
-        shell: bash
+          ignore-exit-codes: 124 137 1
       - name: print disk usage
         if: always()
         uses: priv-kweihmann/meta-sca-ci-utils/diskusage@latest

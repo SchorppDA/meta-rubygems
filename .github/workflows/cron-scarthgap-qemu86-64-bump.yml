@@ -2,7 +2,7 @@ name: "[cron]-[glibc]-[qemuarm64]-[bump]"
 
 on:
   repository_dispatch:
-    types: do-master-bump
+    types: do-scarthgap-bump
   schedule:
     - cron: "0 2 * * 2"
   workflow_dispatch:
@@ -11,7 +11,7 @@ jobs:
   buildrun:
     name: "build"
     env:
-      SCM_BRANCH: master
+      SCM_BRANCH: scarthgap
       BUILD_MAXRUNTIME: 21000
       PYTHONIOENCODING: utf8
       LC_ALL: en_US.UTF-8
@@ -47,7 +47,7 @@ jobs:
       - name: checkout (meta-rubygems)
         uses: priv-kweihmann/meta-sca-ci-utils/addlayer@latest
         with:
-          repo: https://github.com/priv-kweihmann/meta-rubygems.git
+          repo: https://github.com/${{ github.repository_owner }}/meta-rubygems.git
           branch: ${{ env.SCM_BRANCH }}
           remove-git: "0"
           add-layer: "0"
