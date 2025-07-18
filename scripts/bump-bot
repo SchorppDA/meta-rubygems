@@ -42,11 +42,11 @@ def __sed(source, needle, replacement):
     with open(source, "w") as o:
         o.write(cnt.replace(needle, replacement))
 
-def change_log(map):
+def change_log(map,branch):
     res = []
     for k, v in map.items():
-        if v.upstream_head != v.current_revision:
-            res.append("* update {} to {}".format(os.path.basename(k.rstrip("/")), v.upstream_head))
+        if v.upstream_head_branch(branch) != v.current_revision:
+            res.append("* update {} to {}".format(os.path.basename(k.rstrip("/")), v.upstream_head_branch(branch)))
     return "\n".join(res)
 
 def main():
@@ -69,16 +69,16 @@ def main():
             if _ext in [".yml", ".md"]:
                 for _, v in _map_repo.items():
                     __sed(os.path.join(root, _f), str(
-                        v.current_revision), str(v.upstream_head))
+                        v.current_revision), str(v.upstream_head_branch(_args.branch)))
 
     if any(_main_git.changes):
         # commit
-        _main_git.commit(_main_git.changes, "Bump revisions", change_log(_map_repo))
+        _main_git.commit(_main_git.changes, "Bump revisions", change_log(_map_repo,_args.branch))
         # publish branch
         _main_git.publish()
         # create pull request
         _github.create_pullrequest(
-            _main_git.branch, "Bump layer revisions", change_log(_map_repo))
+            _main_git.branch, "Bump layer revisions", change_log(_map_repo,_args.branch))
 
 
 if __name__ == '__main__':
